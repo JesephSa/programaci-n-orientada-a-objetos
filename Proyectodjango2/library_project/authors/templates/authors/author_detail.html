@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalle del Autor{% endblock %}
+
+{% block content %}
+<h1>Detalle del Autor</h1>
+<p><b>Nombre:</b> {{ author.name }}</p>
+<p><b>Biografía:</b> {{ author.biography }}</p>
+<p><b>Fecha de Nacimiento:</b> {{ author.birth_date }}</p>
+
+<a href="{% url 'author_update' author.pk %}" class="btn">Editar</a>
+<a href="{% url 'author_delete' author.pk %}" class="btn danger">Eliminar</a>
+<a href="{% url 'author_list' %}" class="btn">Volver</a>
+{% endblock %}
