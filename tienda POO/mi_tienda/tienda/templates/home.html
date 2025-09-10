@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <h3>Filtros por Categoría</h3>
+        <ul class="list-group">
+            <a href="{% url 'home' %}" class="list-group-item list-group-item-action {% if not categoria_seleccionada %}active{% endif %}">Todas</a>
+            {% for categoria in categorias %}
+                <a href="{% url 'home' %}?categoria={{ categoria.id }}" class="list-group-item list-group-item-action {% if categoria.id|stringformat:"s" == categoria_seleccionada %}active{% endif %}">
+                    {{ categoria.nombre }}
+                </a>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-md-9">
+        <a href="{% url 'producto_crear' %}" class="btn btn-success mb-3">+ Agregar Producto</a>    
+        <div class="row">
+            {% for producto in page_obj %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" class="card-img-top" alt="{{ producto.nombre }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ producto.nombre }}</h5>
+                            <p class="card-text">{{ producto.descripcion|truncatechars:100 }}</p>
+                            <p class="card-text"><strong>${{ producto.precio }}</strong></p>
+                            <a href="#" class="btn btn-primary">Ver Detalles</a>
+                            <a href="{% url 'producto_editar' producto.id %}" class="btn btn-warning btn-sm">Editar</a>
+                            <a href="{% url 'producto_eliminar' producto.id %}" class="btn btn-danger btn-sm">Eliminar</a>
+
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No se encontraron productos.</p>
+            {% endfor %}
+        </div>
+
+        <nav>
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1&categoria={{ categoria_seleccionada }}">Primera</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}&categoria={{ categoria_seleccionada }}">Anterior</a></li>
+                {% endif %}
+                <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}&categoria={{ categoria_seleccionada }}">Siguiente</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&categoria={{ categoria_seleccionada }}">Última</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
